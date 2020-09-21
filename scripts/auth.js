@@ -7,7 +7,7 @@ auth.onAuthStateChanged(user => {
     if (user) {
         console.log('user login:', user);
         // get data from firebase
-        db.collection('guides').get().then(snapshot => {
+        db.collection('guides').onSnapshot(snapshot => {
             // console.log(snapshot.docs);
             setupGuides(snapshot.docs);
             setupNavUi(user);
@@ -34,7 +34,7 @@ createForm.addEventListener('submit', (e) => {
         const modal = document.querySelector('#modal-create');
         M.Modal.getInstance(modal).close();
         createForm.reset();
-    }).catch(err =>{
+    }).catch(err => {
         console.log(err.message);
     })
 });
