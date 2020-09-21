@@ -25,13 +25,21 @@ const setupGuides = (data) => {
 // setting ui nav link based on auth status
 const loggedOutLinks = document.querySelectorAll('.logged-out');
 const loggedInLinks = document.querySelectorAll('.logged-in');
+const accountDetail = document.querySelector('.account-details');
 
 const setupNavUi = (user) => {
   if (user) {
+    // account info
+    const html = `
+        <div>Logged in as : ${user.email} </div>
+    `;
+    accountDetail.innerHTML = html;
     // toggle loggedin ui element
     loggedInLinks.forEach(item => item.style.display = 'block');
     loggedOutLinks.forEach(item => item.style.display = 'none');
   } else {
+    // hide acc info
+    accountDetail.innerHTML = '';
     // toggle logged out ui element
     loggedInLinks.forEach(item => item.style.display = 'none');
     loggedOutLinks.forEach(item => item.style.display = 'block');

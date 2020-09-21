@@ -11,6 +11,8 @@ auth.onAuthStateChanged(user => {
             // console.log(snapshot.docs);
             setupGuides(snapshot.docs);
             setupNavUi(user);
+        }).catch(err => {
+            console.log(err.message);
         });
     } else {
         console.log('user logged out');
