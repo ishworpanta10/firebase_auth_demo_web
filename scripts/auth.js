@@ -17,7 +17,27 @@ auth.onAuthStateChanged(user => {
         setupNavUi();
         setupGuides([]);
     }
-})
+});
+
+// create new guide in firestore
+const createForm = document.querySelector('#create-form');
+createForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const title = createForm['title'].value;
+    const content = createForm['content'].value;
+    db.collection('guides').add({
+        title: title,
+        content: content,
+    }).then(() => {
+        // close the create modal and reset the create form
+        const modal = document.querySelector('#modal-create');
+        M.Modal.getInstance(modal).close();
+        createForm.reset();
+    }).catch(err =>{
+        console.log(err.message);
+    })
+});
 
 
 
