@@ -30,10 +30,14 @@ const accountDetail = document.querySelector('.account-details');
 const setupNavUi = (user) => {
   if (user) {
     // account info
-    const html = `
+    db.collection('users').doc(user.uid).get().then(doc => {
+      const html = `
         <div>Logged in as : ${user.email} </div>
-    `;
-    accountDetail.innerHTML = html;
+        <div>Bio : ${doc.data().bio} </div>
+        `;
+      accountDetail.innerHTML = html;
+    })
+
     // toggle loggedin ui element
     loggedInLinks.forEach(item => item.style.display = 'block');
     loggedOutLinks.forEach(item => item.style.display = 'none');

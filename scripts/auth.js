@@ -11,7 +11,7 @@ auth.onAuthStateChanged(user => {
             // console.log(snapshot.docs);
             setupGuides(snapshot.docs);
             setupNavUi(user);
-        }).catch(err => {
+        }, err => {
             console.log(err.message);
         });
     } else {
@@ -53,11 +53,15 @@ signupForm.addEventListener('submit', (e) => {
     const password = signupForm['signup-password'].value;
     //signed up user
     auth.createUserWithEmailAndPassword(email, password).then((cred) => {
+        return db.collection('users').doc(cred.user.uid).set({
+            bio: signupForm['signup-bio'].value,
+        });
+    }).then(() => {
         // console.log(cred);
         const modal = document.querySelector('#modal-signup');
         M.Modal.getInstance(modal).close();
         signupForm.reset();
-    });
+    })
 });
 
 // logout
