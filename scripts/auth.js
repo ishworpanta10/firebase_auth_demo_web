@@ -1,21 +1,35 @@
-
+// add admin cloud function
+const adminForm = document.querySelector('.admin-actions');
+adminForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    // const admin_email = adminForm['admin-email'].value;
+    const admin_email = document.querySelector("#admin-email").value;
+    const addAdminRole = functions.httpsCallable('addAdminRole'); //function name used in cloud function export.fn_name
+    addAdminRole({ email: admin_email }).then(result => {
+        // console.log(result);
+    });
+})
 
 
 // listen for auth status changes
 auth.onAuthStateChanged(user => {
     // console.log(user);
     if (user) {
-        console.log('user login:', user);
+        // console.log('user login:', user);
         // get data from firebase
+        user.getIdTokenResult().then(idTokenResult => {
+            // console.log(`Admin :  ${idTokenResult.claims.admin}`);
+            user.admin = idTokenResult.claims.admin
+            setupNavUi(user);
+        })
         db.collection('guides').onSnapshot(snapshot => {
             // console.log(snapshot.docs);
             setupGuides(snapshot.docs);
-            setupNavUi(user);
         }, err => {
             console.log(err.message);
         });
     } else {
-        console.log('user logged out');
+        // console.log('user logged out');
         setupNavUi();
         setupGuides([]);
     }
@@ -78,8 +92,8 @@ const loginForm = document.querySelector('#login-form');
 loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
     //get user info
-    const email = signupForm['login-email'].value;
-    const password = signupForm['login-password'].value;
+    const email = loginForm['login-email'].value;
+    const password = loginForm['login-password'].value;
 
     auth.signInWithEmailAndPassword(email, password).then(cred => {
         // console.log(cred.user)

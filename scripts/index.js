@@ -7,7 +7,7 @@ const setupGuides = (data) => {
     let html = '';
     data.forEach(doc => {
       const guide = doc.data();
-      console.log(guide);
+      // console.log(guide);
       const li = `
      <li>
         <div class="collapsible-header grey lighten-4">${guide.title}</div>
@@ -26,14 +26,21 @@ const setupGuides = (data) => {
 const loggedOutLinks = document.querySelectorAll('.logged-out');
 const loggedInLinks = document.querySelectorAll('.logged-in');
 const accountDetail = document.querySelector('.account-details');
+const adminItems = document.querySelectorAll('.admin');
+
 
 const setupNavUi = (user) => {
   if (user) {
+    // if admin
+    if (user.admin) {
+      adminItems.forEach(item => item.style.display = 'block');
+    }
     // account info
     db.collection('users').doc(user.uid).get().then(doc => {
       const html = `
         <div>Logged in as : ${user.email} </div>
         <div>Bio : ${doc.data().bio} </div>
+        <div class="pink-text"> ${user.admin ? 'Admin' : ''}  </div>
         `;
       accountDetail.innerHTML = html;
     })
@@ -42,6 +49,8 @@ const setupNavUi = (user) => {
     loggedInLinks.forEach(item => item.style.display = 'block');
     loggedOutLinks.forEach(item => item.style.display = 'none');
   } else {
+    adminItems.forEach(item => item.style.display = 'none');
+
     // hide acc info
     accountDetail.innerHTML = '';
     // toggle logged out ui element
